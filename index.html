@@ -223,15 +223,13 @@
 
   /* Cursor Trail */
   .cursor-trail {
-    position: fixed;
+    position: absolute;
     width: 15px;
     height: 15px;
+    background: rgba(255,255,255,0.8);
     border-radius: 50%;
-    background: white;
     pointer-events: none;
-    user-select: none;
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.3);
+    transform: translate(-50%, -50%) scale(1);
     z-index: 6;
   }
 
@@ -313,7 +311,7 @@
 </audio>
 
 <script>
-  // --- SNOWFALL ---
+  // --- Snowflakes ---
   const snowCount = 15;
   for (let i = 0; i < snowCount; i++) {
     const snowflake = document.createElement('div');
@@ -328,43 +326,7 @@
     document.body.appendChild(snowflake);
   }
 
-  // --- CURSOR TRAIL ---
-  const trailCount = 20;
-  const trailElements = [];
-  for (let i = 0; i < trailCount; i++) {
-    const glow = document.createElement('div');
-    glow.className = 'cursor-trail';
-    document.body.appendChild(glow);
-    trailElements.push(glow);
-  }
-
-  let mouseX = 0, mouseY = 0;
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-  });
-
-  let index = 0;
-  function animateTrail() {
-    const glow = trailElements[index];
-    glow.style.left = mouseX + 'px';
-    glow.style.top = mouseY + 'px';
-
-    glow.style.transition = 'none';
-    glow.style.opacity = '1';
-    glow.style.transform = 'translate(-50%, -50%) scale(1)';
-    glow.offsetHeight;
-
-    glow.style.transition = 'all 0.6s ease-out';
-    glow.style.opacity = '0';
-    glow.style.transform = 'translate(-50%, -50%) scale(0.3)';
-
-    index = (index + 1) % trailCount;
-    requestAnimationFrame(animateTrail);
-  }
-  animateTrail();
-
-  // --- CLICK TO ENTER ---
+  // --- Click to enter ---
   const overlay = document.getElementById('intro-overlay');
   const container = document.querySelector('.main-container');
   const audio = document.getElementById('bg-audio');
@@ -374,6 +336,27 @@
     setTimeout(() => overlay.style.display = 'none', 1000);
     container.style.opacity = '1';
     audio.play();
+  });
+
+  // --- Cursor trail forever ---
+  document.addEventListener('mousemove', (e) => {
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    trail.style.left = e.pageX + 'px';
+    trail.style.top = e.pageY + 'px';
+    document.body.appendChild(trail);
+
+    // Animate fade and shrink
+    requestAnimationFrame(() => {
+      trail.style.transition = 'all 0.6s ease-out';
+      trail.style.opacity = '0';
+      trail.style.transform = 'translate(-50%, -50%) scale(0.3)';
+    });
+
+    // Remove after animation
+    setTimeout(() => {
+      trail.remove();
+    }, 600);
   });
 </script>
 </body>
