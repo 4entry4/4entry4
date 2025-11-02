@@ -66,8 +66,9 @@
     border-radius: 25px;
     z-index: 1;
     opacity: 0;
-    transition: opacity 1s ease, transform 0.2s ease;
+    transition: opacity 1s ease, transform 0.1s ease;
     transform-style: preserve-3d;
+    transform-origin: center center;
     background: rgba(255,255,255,0.05);
     border: 2px solid rgba(255,255,255,0.6);
   }
@@ -84,13 +85,13 @@
     height: 200px;
     margin-bottom: 20px;
     opacity: 0.9;
-    transition: transform 0.2s ease;
+    transition: transform 0.1s ease;
   }
 
   h1.title {
     font-size: 1.3em;
     margin: 0;
-    transition: transform 0.2s ease;
+    transition: transform 0.1s ease;
   }
 
   p.subtitle {
@@ -98,7 +99,7 @@
     color: #ccc;
     letter-spacing: 2px;
     margin-bottom: 20px;
-    transition: transform 0.2s ease;
+    transition: transform 0.1s ease;
   }
 
   /* Discord Box */
@@ -111,7 +112,7 @@
     border-radius: 20px;
     width: fit-content;
     margin: 0 auto 30px auto;
-    transition: transform 0.2s ease;
+    transition: transform 0.1s ease;
   }
 
   .discord-avatar-wrapper {
@@ -183,6 +184,7 @@
     justify-content: center;
     gap: 25px;
     margin-bottom: 20px;
+    transition: transform 0.1s ease;
   }
 
   .socials a img {
@@ -205,6 +207,7 @@
     animation: glow 2s infinite alternate;
     justify-content: center;
     margin: 0 auto 20px auto;
+    transition: transform 0.1s ease;
   }
 
   .views img {
@@ -352,11 +355,8 @@
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -15;
-    const rotateY = ((x - centerX) / centerX) * 15;
+    const rotateX = ((y / rect.height) - 0.5) * -20; // tilt up/down
+    const rotateY = ((x / rect.width) - 0.5) * 20;   // tilt left/right
 
     container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
@@ -370,9 +370,9 @@
   });
 
   container.addEventListener('mouseleave', () => {
-    container.style.transform = `translate(-50%, -50%) rotateX(0deg) rotateY(0deg)`;
+    container.style.transform = 'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)';
     for (let key in innerElements) {
-      innerElements[key].style.transform = `translateZ(0px)`;
+      innerElements[key].style.transform = 'translateZ(0px)';
     }
   });
 </script>
