@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -221,6 +221,24 @@
     100% { transform: translateY(110vh); }
   }
 
+  /* Cursor Trail */
+  .cursor-trail {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px 5px rgba(255,255,255,0.6);
+    z-index: 10;
+  }
+
+  @keyframes fadeTrail {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  }
+
   /* Mobile */
   @media(max-width: 600px){
     .icon { width: 120px; height: 120px; }
@@ -299,7 +317,7 @@
 </audio>
 
 <script>
-  // --- UPDATED SNOWFALL SCRIPT (from second HTML) ---
+  // --- SNOWFALL ---
   const snowCount = 15;
   for (let i = 0; i < snowCount; i++) {
     const snowflake = document.createElement('div');
@@ -313,6 +331,36 @@
     snowflake.style.top = (-20 - Math.random() * 20) + 'px';
     document.body.appendChild(snowflake);
   }
+
+  // --- CURSOR TRAIL ---
+  const trailCount = 20;
+  const trailElements = [];
+  for (let i = 0; i < trailCount; i++) {
+    const glow = document.createElement('div');
+    glow.className = 'cursor-trail';
+    glow.style.opacity = '0';
+    document.body.appendChild(glow);
+    trailElements.push(glow);
+  }
+
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+  });
+
+  let index = 0;
+  function animateTrail() {
+    const glow = trailElements[index];
+    glow.style.left = mouseX + 'px';
+    glow.style.top = mouseY + 'px';
+    glow.style.opacity = '1';
+    glow.style.transform = 'translate(-50%, -50%) scale(1)';
+    glow.style.animation = 'fadeTrail 0.8s forwards';
+    index = (index + 1) % trailCount;
+    requestAnimationFrame(animateTrail);
+  }
+  animateTrail();
 
   // Click to enter
   const overlay = document.getElementById('intro-overlay');
