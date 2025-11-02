@@ -216,24 +216,24 @@
     font-size: 10px;
   }
 
+  /* Trail dot */
+  .trail-dot {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+    opacity: 0.6;
+    mix-blend-mode: screen;
+    transition: opacity 0.5s linear, transform 0.5s linear;
+  }
+
   @keyframes fall {
     0% { transform: translateY(-10px); }
     100% { transform: translateY(110vh); }
-  }
-
-  /* Cursor Trail */
-  .cursor-trail {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    pointer-events: none;
-    user-select: none;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 15px 5px white;
-    transform: translate(-50%, -50%);
-    transition: left 0.05s ease-out, top 0.05s ease-out;
-    z-index: 10;
   }
 
   /* Mobile */
@@ -341,16 +341,21 @@
     audio.play();
   });
 
-  // --- Cursor trail ---
-  const trail = document.createElement('div');
-  trail.className = 'cursor-trail';
-  document.body.appendChild(trail);
+  // --- Mouse trail ---
+  document.addEventListener('mousemove', e => {
+    const dot = document.createElement('div');
+    dot.className = 'trail-dot';
+    dot.style.left = `${e.clientX - 6}px`;
+    dot.style.top = `${e.clientY - 6}px`;
+    document.body.appendChild(dot);
 
-  document.addEventListener('mousemove', (e) => {
-    trail.style.left = e.clientX + 'px';
-    trail.style.top = e.clientY + 'px';
+    // fade and remove
+    setTimeout(() => {
+      dot.style.opacity = '0';
+      dot.style.transform = 'scale(0.5)';
+      setTimeout(() => dot.remove(), 500);
+    }, 0);
   });
 </script>
 </body>
 </html>
-
