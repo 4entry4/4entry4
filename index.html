@@ -1,0 +1,330 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>.cashnout.</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    background: black;
+    color: white;
+    height: 100vh;
+    overflow: hidden;
+    cursor: url('mark.png'), auto;
+  }
+
+  /* Background Video */
+  #bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  /* Intro Overlay */
+  #intro-overlay {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index: 5;
+  }
+
+  #intro-overlay h1 {
+    font-size: 2em;
+    color: #fff;
+    text-shadow: 0 0 20px #fff, 0 0 40px #fff;
+    animation: glow 1.5s infinite alternate;
+    cursor: pointer;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+    to { text-shadow: 0 0 20px #fff, 0 0 40px #fff; }
+  }
+
+  /* Main Container */
+  .main-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    padding: 40px;
+    border-radius: 25px;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 1s ease;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.6);
+  }
+
+  .center {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .icon {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  h1.title {
+    font-size: 1.3em;
+    margin: 0;
+  }
+
+  p.subtitle {
+    font-size: 0.5em;
+    color: #ccc;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
+  /* Discord Box */
+  .discord-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255,255,255,0.05);
+    padding: 10px 20px;
+    border-radius: 20px;
+    width: fit-content;
+    margin: 0 auto 30px auto;
+  }
+
+  .discord-avatar-wrapper {
+    position: relative;
+    width: 50px;
+    height: 50px;
+  }
+
+  .discord-avatar-wrapper img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .dnd-status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ed4245;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dnd-status::before {
+    content: "";
+    width: 8px;
+    height: 2px;
+    background: white;
+    border-radius: 1px;
+  }
+
+  .discord-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .discord-info .username {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .heart-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .discord-info .tag {
+    font-size: 0.7em;
+    color: #ccc;
+    margin-top: 2px;
+  }
+
+  /* Socials */
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 20px;
+  }
+
+  .socials a img {
+    width: 35px;
+    filter: drop-shadow(0 0 5px #fff) brightness(0) invert(1);
+    transition: 0.2s ease;
+  }
+
+  .socials a img:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px #fff) brightness(0) invert(1);
+  }
+
+  /* Views */
+  .views {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8em;
+    animation: glow 2s infinite alternate;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+  }
+
+  .views img {
+    width: 20px;
+    filter: brightness(0) invert(1);
+  }
+
+  /* Snowflakes */
+  .snowflake {
+    position: fixed;
+    color: white;
+    pointer-events: none;
+    user-select: none;
+    z-index: 4;
+    opacity: 0.8;
+    font-size: 10px;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10px); }
+    100% { transform: translateY(110vh); }
+  }
+
+  /* Mobile */
+  @media(max-width: 600px){
+    .icon { width: 120px; height: 120px; }
+    h1.title { font-size: 1em; }
+    p.subtitle { font-size: 0.45em; }
+    .discord-avatar-wrapper { width: 40px; height: 40px; }
+    .discord-avatar-wrapper img { width: 40px; height: 40px; }
+    .dnd-status { width: 12px; height: 12px; }
+    .socials a img { width: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted loop playsinline id="bg-video">
+  <source src="From KlickPin CF Endless Falls [Video] [Video] _ Green screen video backgrounds Video background Film texture.mp4" type="video/mp4">
+</video>
+
+<!-- Intro Overlay -->
+<div id="intro-overlay">
+  <h1>CLICK TO ENTER...</h1>
+</div>
+
+<!-- Main Container -->
+<div class="main-container">
+  <div class="center">
+    <img class="icon" src="aeb067b15a7d0614163347245fb1f0-unscreen.gif" alt="icon">
+    <h1 class="title">.cashnout.</h1>
+    <p class="subtitle">U HAVE NO HEART</p>
+
+    <!-- Discord Box -->
+    <div class="discord-box">
+      <div class="discord-avatar-wrapper">
+        <img src="Cover of Shh by Zzz...jpg" alt="discord avatar">
+        <div class="dnd-status"></div>
+      </div>
+      <div class="discord-info">
+        <div class="username">
+          .cashnout.
+          <span class="heart-wrapper">
+            <img src="7400-white-doodle-heart.png" alt="heart-tag" style="width:20px; height:20px;">
+          </span>
+        </div>
+        <div class="tag">nonchalant</div>
+      </div>
+    </div>
+
+    <!-- Socials -->
+    <div class="socials">
+      <a href="https://www.roblox.com/users/1511905473/profile" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/roblox.svg" alt="roblox">
+      </a>
+      <a href="https://www.instagram.com/awsumsauceboi" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="instagram">
+      </a>
+      <a href="https://www.tiktok.com/@rotinyourgrave" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="tiktok">
+      </a>
+      <a href="https://open.spotify.com/user/31kgvg37xjtezlpb3xf56pbsx4i4" target="_blank">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/spotify.svg" alt="spotify">
+      </a>
+    </div>
+
+    <!-- Views -->
+    <div class="views">
+      <img src="https://cdn-icons-png.flaticon.com/512/709/709722.png" alt="eye">
+      <div id="view-count">1,293</div>
+    </div>
+  </div>
+</div>
+
+<!-- Background Music -->
+<audio id="bg-audio" loop>
+  <source src="SpotiDown.App - BodyHigh - 6cd.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // --- UPDATED SNOWFALL SCRIPT (from second HTML) ---
+  const snowCount = 15;
+  for (let i = 0; i < snowCount; i++) {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.textContent = '✦';
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    const size = 8 + Math.random() * 12;
+    snowflake.style.fontSize = size + 'px';
+    const fallDuration = 10 + Math.random() * 10;
+    snowflake.style.animation = `fall ${fallDuration}s linear infinite`;
+    snowflake.style.top = (-20 - Math.random() * 20) + 'px';
+    document.body.appendChild(snowflake);
+  }
+
+  // Click to enter
+  const overlay = document.getElementById('intro-overlay');
+  const container = document.querySelector('.main-container');
+  const audio = document.getElementById('bg-audio');
+
+  overlay.addEventListener('click', () => {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.style.display = 'none', 1000);
+    container.style.opacity = '1';
+    audio.play();
+  });
+</script>
+</body>
+</html>
