@@ -15,7 +15,7 @@
     height: 100vh;
     overflow: hidden;
     cursor: url('mark.png'), auto;
-    perspective: 1000px; /* for 3D tilt */
+    perspective: 1000px;
   }
 
   /* Background Video */
@@ -102,7 +102,6 @@
     transition: transform 0.1s ease;
   }
 
-  /* Discord Box */
   .discord-box {
     display: flex;
     align-items: center;
@@ -178,7 +177,6 @@
     margin-top: 2px;
   }
 
-  /* Socials */
   .socials {
     display: flex;
     justify-content: center;
@@ -198,7 +196,6 @@
     filter: drop-shadow(0 0 10px #fff) brightness(0) invert(1);
   }
 
-  /* Views */
   .views {
     display: flex;
     align-items: center;
@@ -215,7 +212,6 @@
     filter: brightness(0) invert(1);
   }
 
-  /* Snowflakes */
   .snowflake {
     position: fixed;
     color: white;
@@ -232,7 +228,6 @@
     100% { transform: translateY(110vh) translateX(-10px); }
   }
 
-  /* Mobile */
   @media(max-width: 600px){
     .icon { width: 120px; height: 120px; }
     h1.title { font-size: 1em; }
@@ -264,7 +259,6 @@
     <h1 class="title">.cashnout.</h1>
     <p class="subtitle">U HAVE NO HEART</p>
 
-    <!-- Discord Box -->
     <div class="discord-box">
       <div class="discord-avatar-wrapper">
         <img src="Cover of Shh by Zzz...jpg" alt="discord avatar">
@@ -281,7 +275,6 @@
       </div>
     </div>
 
-    <!-- Socials -->
     <div class="socials">
       <a href="https://www.roblox.com/users/1511905473/profile" target="_blank">
         <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/roblox.svg" alt="roblox">
@@ -297,7 +290,6 @@
       </a>
     </div>
 
-    <!-- Views -->
     <div class="views">
       <img src="https://cdn-icons-png.flaticon.com/512/709/709722.png" alt="eye">
       <div id="view-count">1,293</div>
@@ -311,7 +303,7 @@
 </audio>
 
 <script>
-  // --- Snowfall ---
+  // Snowflakes
   const snowCount = 15;
   for (let i = 0; i < snowCount; i++) {
     const snowflake = document.createElement('div');
@@ -340,7 +332,7 @@
     audio.play();
   });
 
-  // --- Tilt effect ---
+  // Tilt effect with proximity
   const innerElements = {
     icon: document.querySelector('.icon'),
     title: document.querySelector('.title'),
@@ -350,29 +342,34 @@
     views: document.querySelector('.views')
   };
 
-  container.addEventListener('mousemove', (e) => {
+  const maxDistance = 150; // extra area around the container
+
+  document.addEventListener('mousemove', (e) => {
     const rect = container.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-    const rotateX = ((y / rect.height) - 0.5) * -20; // tilt up/down
-    const rotateY = ((x / rect.width) - 0.5) * 20;   // tilt left/right
+    const dx = e.clientX - centerX;
+    const dy = e.clientY - centerY;
 
-    container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    if (Math.abs(dx) < rect.width/2 + maxDistance && Math.abs(dy) < rect.height/2 + maxDistance) {
+      const rotateX = (-dy / (rect.height/2 + maxDistance)) * 20;
+      const rotateY = (dx / (rect.width/2 + maxDistance)) * 20;
 
-    // Parallax for inner elements
-    innerElements.icon.style.transform = `translateZ(20px)`;
-    innerElements.title.style.transform = `translateZ(15px)`;
-    innerElements.subtitle.style.transform = `translateZ(10px)`;
-    innerElements.discord.style.transform = `translateZ(5px)`;
-    innerElements.socials.style.transform = `translateZ(5px)`;
-    innerElements.views.style.transform = `translateZ(5px)`;
-  });
+      container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-  container.addEventListener('mouseleave', () => {
-    container.style.transform = 'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)';
-    for (let key in innerElements) {
-      innerElements[key].style.transform = 'translateZ(0px)';
+      // Parallax
+      innerElements.icon.style.transform = `translateZ(20px)`;
+      innerElements.title.style.transform = `translateZ(15px)`;
+      innerElements.subtitle.style.transform = `translateZ(10px)`;
+      innerElements.discord.style.transform = `translateZ(5px)`;
+      innerElements.socials.style.transform = `translateZ(5px)`;
+      innerElements.views.style.transform = `translateZ(5px)`;
+    } else {
+      container.style.transform = 'translate(-50%, -50%) rotateX(0deg) rotateY(0deg)';
+      for (let key in innerElements) {
+        innerElements[key].style.transform = 'translateZ(0px)';
+      }
     }
   });
 </script>
