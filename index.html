@@ -221,21 +221,6 @@
     100% { transform: translateY(110vh); }
   }
 
-  /* Cursor Trail */
-  .trail-dot {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    background: white;
-    border-radius: 50%;
-    pointer-events: none;
-    user-select: none;
-    opacity: 0.8;
-    box-shadow: 0 0 8px white, 0 0 15px white;
-    z-index: 10;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-
   /* Mobile */
   @media(max-width: 600px){
     .icon { width: 120px; height: 120px; }
@@ -314,7 +299,7 @@
 </audio>
 
 <script>
-  // --- Snowflakes ---
+  // --- UPDATED SNOWFALL SCRIPT (from second HTML) ---
   const snowCount = 15;
   for (let i = 0; i < snowCount; i++) {
     const snowflake = document.createElement('div');
@@ -329,7 +314,7 @@
     document.body.appendChild(snowflake);
   }
 
-  // --- Click to enter ---
+  // Click to enter
   const overlay = document.getElementById('intro-overlay');
   const container = document.querySelector('.main-container');
   const audio = document.getElementById('bg-audio');
@@ -340,35 +325,6 @@
     container.style.opacity = '1';
     audio.play();
   });
-
-  // --- Cursor Trail ---
-  const trailDots = [];
-  const trailMax = 20; // number of dots in trail
-
-  for (let i = 0; i < trailMax; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'trail-dot';
-    document.body.appendChild(dot);
-    trailDots.push(dot);
-  }
-
-  let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-
-  document.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-
-  function animateTrail() {
-    trailDots.forEach((dot, index) => {
-      const next = trailDots[index - 1] || { x: mouse.x, y: mouse.y };
-      dot.x += (next.x - (dot.x || next.x)) * 0.3;
-      dot.y += (next.y - (dot.y || next.y)) * 0.3;
-      dot.style.transform = `translate(${dot.x - 5}px, ${dot.y - 5}px)`; // center dot
-    });
-    requestAnimationFrame(animateTrail);
-  }
-  animateTrail();
 </script>
 </body>
 </html>
