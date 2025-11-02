@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>.cashnout.</title>
+<title>immortal</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="icon" href="cig.png" type="image/png">
 <style>
   body {
     margin: 0;
@@ -342,7 +343,7 @@
     views: document.querySelector('.views')
   };
 
-  const maxDistance = 150; // extra area around the container
+  const maxDistance = 150;
 
   document.addEventListener('mousemove', (e) => {
     const rect = container.getBoundingClientRect();
@@ -358,7 +359,6 @@
 
       container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-      // Parallax
       innerElements.icon.style.transform = `translateZ(20px)`;
       innerElements.title.style.transform = `translateZ(15px)`;
       innerElements.subtitle.style.transform = `translateZ(10px)`;
@@ -372,6 +372,40 @@
       }
     }
   });
+
+  // Animated lowercase tab title
+  const titles = ["immortal", "i m m o r t a l", "immortal"];
+  let index = 0;
+  let subIndex = 0;
+  let forward = true;
+
+  function typeTitle() {
+    let current = titles[index];
+    let display = current.substring(0, subIndex);
+
+    document.title = display;
+
+    if (forward) {
+      if (subIndex < current.length) {
+        subIndex++;
+        setTimeout(typeTitle, 150);
+      } else {
+        forward = false;
+        setTimeout(typeTitle, 700);
+      }
+    } else {
+      if (subIndex > 0) {
+        subIndex--;
+        setTimeout(typeTitle, 100);
+      } else {
+        forward = true;
+        index = (index + 1) % titles.length;
+        setTimeout(typeTitle, 300);
+      }
+    }
+  }
+
+  typeTitle();
 </script>
 </body>
 </html>
