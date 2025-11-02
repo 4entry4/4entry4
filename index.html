@@ -223,20 +223,16 @@
 
   /* Cursor Trail */
   .cursor-trail {
-    position: absolute;
-    width: 12px;
-    height: 12px;
+    position: fixed;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.8);
+    background: white;
     pointer-events: none;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 20px 5px rgba(255,255,255,0.6);
-    z-index: 10;
-  }
-
-  @keyframes fadeTrail {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    user-select: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+    z-index: 6;
   }
 
   /* Mobile */
@@ -338,7 +334,6 @@
   for (let i = 0; i < trailCount; i++) {
     const glow = document.createElement('div');
     glow.className = 'cursor-trail';
-    glow.style.opacity = '0';
     document.body.appendChild(glow);
     trailElements.push(glow);
   }
@@ -354,15 +349,22 @@
     const glow = trailElements[index];
     glow.style.left = mouseX + 'px';
     glow.style.top = mouseY + 'px';
+
+    glow.style.transition = 'none';
     glow.style.opacity = '1';
     glow.style.transform = 'translate(-50%, -50%) scale(1)';
-    glow.style.animation = 'fadeTrail 0.8s forwards';
+    glow.offsetHeight;
+
+    glow.style.transition = 'all 0.6s ease-out';
+    glow.style.opacity = '0';
+    glow.style.transform = 'translate(-50%, -50%) scale(0.3)';
+
     index = (index + 1) % trailCount;
     requestAnimationFrame(animateTrail);
   }
   animateTrail();
 
-  // Click to enter
+  // --- CLICK TO ENTER ---
   const overlay = document.getElementById('intro-overlay');
   const container = document.querySelector('.main-container');
   const audio = document.getElementById('bg-audio');
