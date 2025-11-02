@@ -216,24 +216,24 @@
     font-size: 10px;
   }
 
-  /* Trail dot */
-  .trail-dot {
-    position: fixed;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: white;
-    pointer-events: none;
-    user-select: none;
-    z-index: 10;
-    opacity: 0.6;
-    mix-blend-mode: screen;
-    transition: opacity 0.5s linear, transform 0.5s linear;
-  }
-
   @keyframes fall {
     0% { transform: translateY(-10px); }
     100% { transform: translateY(110vh); }
+  }
+
+  /* Cursor Trail */
+  .trail-dot {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.8;
+    box-shadow: 0 0 8px white, 0 0 15px white;
+    z-index: 10;
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
   /* Mobile */
@@ -341,21 +341,34 @@
     audio.play();
   });
 
-  // --- Mouse trail ---
-  document.addEventListener('mousemove', e => {
+  // --- Cursor Trail ---
+  const trailDots = [];
+  const trailMax = 20; // number of dots in trail
+
+  for (let i = 0; i < trailMax; i++) {
     const dot = document.createElement('div');
     dot.className = 'trail-dot';
-    dot.style.left = `${e.clientX - 6}px`;
-    dot.style.top = `${e.clientY - 6}px`;
     document.body.appendChild(dot);
+    trailDots.push(dot);
+  }
 
-    // fade and remove
-    setTimeout(() => {
-      dot.style.opacity = '0';
-      dot.style.transform = 'scale(0.5)';
-      setTimeout(() => dot.remove(), 500);
-    }, 0);
+  let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
   });
+
+  function animateTrail() {
+    trailDots.forEach((dot, index) => {
+      const next = trailDots[index - 1] || { x: mouse.x, y: mouse.y };
+      dot.x += (next.x - (dot.x || next.x)) * 0.3;
+      dot.y += (next.y - (dot.y || next.y)) * 0.3;
+      dot.style.transform = `translate(${dot.x - 5}px, ${dot.y - 5}px)`; // center dot
+    });
+    requestAnimationFrame(animateTrail);
+  }
+  animateTrail();
 </script>
 </body>
 </html>
