@@ -19,7 +19,6 @@
     perspective: 1000px;
   }
 
-  /* Background Video */
   #bg-video {
     position: fixed;
     top: 0;
@@ -30,7 +29,6 @@
     z-index: -2;
   }
 
-  /* Intro Overlay */
   #intro-overlay {
     position: fixed;
     top:0;
@@ -56,7 +54,6 @@
     to { text-shadow: 0 0 20px #fff, 0 0 40px #fff; }
   }
 
-  /* Main Container */
   .main-container {
     position: absolute;
     top: 50%;
@@ -243,17 +240,14 @@
 </head>
 <body>
 
-<!-- Background Video -->
 <video autoplay muted loop playsinline id="bg-video">
   <source src="From KlickPin CF Endless Falls [Video] [Video] _ Green screen video backgrounds Video background Film texture.mp4" type="video/mp4">
 </video>
 
-<!-- Intro Overlay -->
 <div id="intro-overlay">
   <h1>CLICK TO ENTER...</h1>
 </div>
 
-<!-- Main Container -->
 <div class="main-container">
   <div class="center">
     <img class="icon" src="aeb067b15a7d0614163347245fb1f0-unscreen.gif" alt="icon">
@@ -298,7 +292,6 @@
   </div>
 </div>
 
-<!-- Background Music -->
 <audio id="bg-audio" loop>
   <source src="SpotiDown.App - BodyHigh - 6cd.mp3" type="audio/mpeg">
 </audio>
@@ -333,7 +326,7 @@
     audio.play();
   });
 
-  // Tilt effect with proximity
+  // Tilt effect
   const innerElements = {
     icon: document.querySelector('.icon'),
     title: document.querySelector('.title'),
@@ -373,16 +366,15 @@
     }
   });
 
-  // Animated lowercase tab title
+  // Tab title animation - never fully disappears
   const titles = ["immortal", "i m m o r t a l", "immortal"];
   let index = 0;
-  let subIndex = 0;
+  let subIndex = 1; // always keep at least "i"
   let forward = true;
 
   function typeTitle() {
     let current = titles[index];
     let display = current.substring(0, subIndex);
-
     document.title = display;
 
     if (forward) {
@@ -394,7 +386,7 @@
         setTimeout(typeTitle, 700);
       }
     } else {
-      if (subIndex > 0) {
+      if (subIndex > 1) { // never below 1
         subIndex--;
         setTimeout(typeTitle, 100);
       } else {
