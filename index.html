@@ -15,6 +15,7 @@
     height: 100vh;
     overflow: hidden;
     cursor: url('mark.png'), auto;
+    perspective: 1000px; /* for 3D tilt */
   }
 
   /* Background Video */
@@ -65,7 +66,8 @@
     border-radius: 25px;
     z-index: 1;
     opacity: 0;
-    transition: opacity 1s ease;
+    transition: opacity 1s ease, transform 0.2s ease;
+    transform-style: preserve-3d;
     background: rgba(255,255,255,0.05);
     border: 2px solid rgba(255,255,255,0.6);
   }
@@ -74,6 +76,7 @@
     text-align: center;
     position: relative;
     z-index: 1;
+    transform-style: preserve-3d;
   }
 
   .icon {
@@ -81,11 +84,13 @@
     height: 200px;
     margin-bottom: 20px;
     opacity: 0.9;
+    transition: transform 0.2s ease;
   }
 
   h1.title {
     font-size: 1.3em;
     margin: 0;
+    transition: transform 0.2s ease;
   }
 
   p.subtitle {
@@ -93,6 +98,7 @@
     color: #ccc;
     letter-spacing: 2px;
     margin-bottom: 20px;
+    transition: transform 0.2s ease;
   }
 
   /* Discord Box */
@@ -105,6 +111,7 @@
     border-radius: 20px;
     width: fit-content;
     margin: 0 auto 30px auto;
+    transition: transform 0.2s ease;
   }
 
   .discord-avatar-wrapper {
@@ -217,8 +224,9 @@
   }
 
   @keyframes fall {
-    0% { transform: translateY(-10px); }
-    100% { transform: translateY(110vh); }
+    0% { transform: translateY(-10px) translateX(0); }
+    50% { transform: translateY(50vh) translateX(10px); }
+    100% { transform: translateY(110vh) translateX(-10px); }
   }
 
   /* Mobile */
@@ -230,6 +238,7 @@
     .discord-avatar-wrapper img { width: 40px; height: 40px; }
     .dnd-status { width: 12px; height: 12px; }
     .socials a img { width: 30px; }
+    .snowflake { font-size: 6px; }
   }
 </style>
 </head>
@@ -299,7 +308,7 @@
 </audio>
 
 <script>
-  // --- UPDATED SNOWFALL SCRIPT (from second HTML) ---
+  // --- Snowfall ---
   const snowCount = 15;
   for (let i = 0; i < snowCount; i++) {
     const snowflake = document.createElement('div');
@@ -320,10 +329,51 @@
   const audio = document.getElementById('bg-audio');
 
   overlay.addEventListener('click', () => {
+    overlay.style.transition = 'opacity 1s ease';
     overlay.style.opacity = '0';
     setTimeout(() => overlay.style.display = 'none', 1000);
+    container.style.transition = 'opacity 1s ease';
     container.style.opacity = '1';
     audio.play();
+  });
+
+  // --- Tilt effect ---
+  const innerElements = {
+    icon: document.querySelector('.icon'),
+    title: document.querySelector('.title'),
+    subtitle: document.querySelector('.subtitle'),
+    discord: document.querySelector('.discord-box'),
+    socials: document.querySelector('.socials'),
+    views: document.querySelector('.views')
+  };
+
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -15;
+    const rotateY = ((x - centerX) / centerX) * 15;
+
+    container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    // Parallax for inner elements
+    innerElements.icon.style.transform = `translateZ(20px)`;
+    innerElements.title.style.transform = `translateZ(15px)`;
+    innerElements.subtitle.style.transform = `translateZ(10px)`;
+    innerElements.discord.style.transform = `translateZ(5px)`;
+    innerElements.socials.style.transform = `translateZ(5px)`;
+    innerElements.views.style.transform = `translateZ(5px)`;
+  });
+
+  container.addEventListener('mouseleave', () => {
+    container.style.transform = `translate(-50%, -50%) rotateX(0deg) rotateY(0deg)`;
+    for (let key in innerElements) {
+      innerElements[key].style.transform = `translateZ(0px)`;
+    }
   });
 </script>
 </body>
